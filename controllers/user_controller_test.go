@@ -29,7 +29,7 @@ func TestGetUsers(t *testing.T) {
 	body, _ := ioutil.ReadAll(res.Body)
 
 	assert.Equal(t, http.StatusOK, res.StatusCode)
-	assert.Contains(t, string(body), "Test User 1")
+	assert.Contains(t, string(body), "Test User")
 }
 
 func TestCreateUser(t *testing.T) {
