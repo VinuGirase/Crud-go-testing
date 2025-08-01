@@ -19,7 +19,7 @@ type User struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
-// from vinu - now test - jj
+// from vinu - now test - jj - qwertyuiop
 func TestRunner() {
 	rate := vegeta.Rate{Freq: 100, Per: time.Second}
 	duration := 10 * time.Second
