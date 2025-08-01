@@ -72,7 +72,7 @@
 
 # NEW CODE 
 
-name: Go Test & Deploy
+name: Go Test
 
 on:
   pull_request:          # Run tests when PR is created or updated
