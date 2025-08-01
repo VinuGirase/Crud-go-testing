@@ -32,7 +32,7 @@
 
 
 # .github/workflows/test-and-deploy.yml
-name: Go Test and Deploy
+name: Go Test
 
 on:
   push:
