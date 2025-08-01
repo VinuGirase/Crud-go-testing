@@ -27,7 +27,7 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	// ----------------------------
+	// ------------------------------
 	// POST /users - dynamic users
 	// ----------------------------
 	postTargeter := func(t *vegeta.Target) error {
