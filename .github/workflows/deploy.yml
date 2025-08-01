@@ -1,20 +1,22 @@
-name: Deploy to Render
+name: Go Test
 
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main  # Trigger on push to main
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    #   - name: Checkout code
+    #     uses: actions/checkout@v3
+
+    #   - name: Set up Go
+    #     uses: actions/setup-go@v5
+    #     with:
+    #       go-version: '1.21' # or the version you use
 
       - name: Run Go tests
         run: go test ./... -v
-
-      - name: Trigger Render Deploy Hook
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
