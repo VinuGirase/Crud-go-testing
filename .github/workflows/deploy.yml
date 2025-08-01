@@ -38,7 +38,7 @@ on:
   push:
     branches:
       - main         # For deployment after merge
-  pull_request:       # For test checks before merge
+  pull_request:       # For test checks before merge-
 
 jobs:
   test:
