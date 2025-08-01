@@ -20,7 +20,7 @@ type User struct {
 	Email string `json:"email"`
 }
 
-func main() {
+func TestRunner() {
 	rate := vegeta.Rate{Freq: 100, Per: time.Second}
 	duration := 10 * time.Second
 	attacker := vegeta.NewAttacker()
