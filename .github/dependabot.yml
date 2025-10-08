@@ -5,8 +5,9 @@
 
 version: 2
 updates:
-  - package-ecosystem: "go"        # For Go modules
-    directory: "/"                 # Usually the root of your repo where go.mod lives
+  - package-ecosystem: "gomod"
+    directory: "/"
     schedule:
-      interval: "daily"            # Check for updates every day
+      interval: "daily"
+
 
