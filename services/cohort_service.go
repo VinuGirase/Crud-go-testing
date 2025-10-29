@@ -25,21 +25,23 @@ import (
 )
 
 type CohortService struct {
-	repo *repository.CohortRepository
+    Repo repository.CohortRepositoryInterface // ✅ interface, no pointer
 }
 
-func NewCohortService(repo *repository.CohortRepository) *CohortService {
-	return &CohortService{repo: repo}
+func NewCohortService(repo repository.CohortRepositoryInterface) *CohortService {
+    return &CohortService{Repo: repo}
 }
+
 
 func (s *CohortService) FetchAllCohorts() ([]models.Cohort, error) {
-	return s.repo.GetAllCohorts()
+    return s.Repo.GetAllCohorts()
 }
 
 func (s *CohortService) FetchCohortByID(id uint) (*models.Cohort, error) {
-	return s.repo.GetCohortByID(id)
+    return s.Repo.GetCohortByID(id)
 }
 
 func (s *CohortService) CreateCohort(cohort models.Cohort) (*models.Cohort, error) {
-	return s.repo.CreateCohort(cohort)
+    return s.Repo.CreateCohort(cohort)
 }
+
