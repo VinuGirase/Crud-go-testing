@@ -7,102 +7,66 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"crud-test-go/config"
 	"crud-test-go/models"
+	"crud-test-go/repository"
+	"crud-test-go/services"
 	"github.com/stretchr/testify/assert"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
-// SetupTestDB initializes a fresh test DB for each test
-func SetupTestDB(t *testing.T) {
-	dsn := "host=localhost user=postgres password=root dbname=bharat_nxt port=5432 sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		t.Fatalf("Failed to connect to test DB: %v", err)
-	}
-
-	// Replace global DB instance
-	config.DB = db
-
-	// // Migrate
-	// err = config.DB.AutoMigrate(&models.Cohort{})
-	// if err != nil {
-	// 	t.Fatalf("Failed to migrate: %v", err)
-	// }
-
-	// Clean table
-	// config.DB.Exec("DELETE FROM cohort_masters")
+func setupMockController() *CohortController {
+	mockRepo := new(repository.MockCohortRepository)
+	service := services.NewCohortService(mockRepo)
+	return NewCohortController(service)
 }
 
 func TestCreateCohort_Success(t *testing.T) {
-	SetupTestDB(t)
+	controller := setupMockController()
+	mockRepo := controller.service.repo.(*repository.MockCohortRepository)
 
-	cohort := models.Cohort{
-		Name:        "Test Cohort",
-		Priority:    15,
-		Description: "Test Description",
-	}
+	cohort := models.Cohort{Name: "Test Cohort", Priority: 15, Description: "Test Description"}
+	mockRepo.On("CreateCohort", cohort).Return(&cohort, nil)
+
 	body, _ := json.Marshal(cohort)
-
 	req := httptest.NewRequest("POST", "/cohorts", bytes.NewBuffer(body))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
-	CreateCohort(w, req)
+	controller.CreateCohort(w, req)
 
-	res := w.Result()
-	defer res.Body.Close()
-
-	assert.Equal(t, http.StatusCreated, res.StatusCode)
-
-	var created models.Cohort
-	json.NewDecoder(res.Body).Decode(&created)
-
-	assert.Equal(t, cohort.Name, created.Name)
-	assert.NotZero(t, created.ID)
+	assert.Equal(t, http.StatusCreated, w.Code)
+	mockRepo.AssertExpectations(t)
 }
 
 func TestCreateCohort_InvalidJSON(t *testing.T) {
-	SetupTestDB(t)
+	controller := setupMockController()
 
 	req := httptest.NewRequest("POST", "/cohorts", bytes.NewBuffer([]byte("invalid-json")))
 	req.Header.Set("Content-Type", "application/json")
 	w := httptest.NewRecorder()
 
-	CreateCohort(w, req)
+	controller.CreateCohort(w, req)
 
-	res := w.Result()
-	defer res.Body.Close()
-
-	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
+	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
 
-
 func TestGetAllCohorts_WithData(t *testing.T) {
-	SetupTestDB(t)
+	controller := setupMockController()
+	mockRepo := controller.service.repo.(*repository.MockCohortRepository)
 
-	// Seed 1 cohort
-	config.DB.Table("bnxt_user.cohort_master").Create(&models.Cohort{
-		Name:        "Seed Cohort",
-		Priority:    16,
-		Description: "Seeder",
-	})
+	mockData := []models.Cohort{
+		{Name: "Seed Cohort", Priority: 10, Description: "Mock"},
+	}
+	mockRepo.On("GetAllCohorts").Return(mockData, nil)
 
 	req := httptest.NewRequest("GET", "/cohorts", nil)
 	w := httptest.NewRecorder()
 
-	GetAllCohorts(w, req)
+	controller.GetAllCohorts(w, req)
 
-	res := w.Result()
-	defer res.Body.Close()
-
-	assert.Equal(t, http.StatusOK, res.StatusCode)
+	assert.Equal(t, http.StatusOK, w.Code)
 
 	var cohorts []models.Cohort
-	json.NewDecoder(res.Body).Decode(&cohorts)
-
-	// assert.Len(t, cohorts, 12) 
+	json.NewDecoder(w.Body).Decode(&cohorts)
 	assert.Equal(t, "Seed Cohort", cohorts[0].Name)
+	mockRepo.AssertExpectations(t)
 }
-
