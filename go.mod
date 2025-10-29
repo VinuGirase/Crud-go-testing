@@ -25,6 +25,7 @@ require (
 	github.com/mailru/easyjson v0.9.0 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/streadway/quantile v0.0.0-20220407130108-4246515d968d // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
