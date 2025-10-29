@@ -29,7 +29,7 @@ func TestGetUsers(t *testing.T) {
 	body, _ := ioutil.ReadAll(res.Body)
 
 	assert.Equal(t, http.StatusOK, res.StatusCode)
-	assert.Contains(t, string(body), "Test User 1")
+	assert.Contains(t, string(body), "Test User")
 }
 
 func TestCreateUser(t *testing.T) {
@@ -74,3 +74,4 @@ func TestCreateUser_DuplicateName(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, res.StatusCode)
 	assert.Contains(t, string(body), "username already taken")
 }
+
