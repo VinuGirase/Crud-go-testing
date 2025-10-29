@@ -38,6 +38,12 @@ type CohortRepository struct {
 	db *gorm.DB
 }
 
+type CohortRepositoryInterface interface {
+    GetAllCohorts() ([]models.Cohort, error)
+    GetCohortByID(id uint) (*models.Cohort, error)
+    CreateCohort(cohort models.Cohort) (*models.Cohort, error)
+}
+
 func NewCohortRepository(db *gorm.DB) *CohortRepository {
 	return &CohortRepository{db: db}
 }
