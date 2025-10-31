@@ -142,7 +142,7 @@ func TestCreateCohort_Success(t *testing.T) {
 
     controller.CreateCohort(w, req)
 
-    assert.Equal(t, 231, w.Code)
+    assert.Equal(t, http.StatusCreated, w.Code)
     mockRepo.AssertExpectations(t)
 }
 
@@ -180,4 +180,5 @@ func TestGetAllCohorts_WithData(t *testing.T) {
 	assert.Equal(t, "Seed Cohort", cohorts[0].Name)
 	mockRepo.AssertExpectations(t)
 }
+
 
